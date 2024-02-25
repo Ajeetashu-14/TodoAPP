@@ -3,7 +3,8 @@ const zod=require("zod")
 /* 
     {
         title: string,
-        description: string
+        description: string,
+        completed: false
     }
     {
         id: string
