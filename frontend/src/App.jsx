@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -9,14 +9,23 @@ function App() {
 
   const [todos,setTodos]=useState([]);
 
-  fetch("http://localhost:3000/todos")
+  //lead to infinite request
+  // fetch("http://localhost:3000/todos")  
+  //   .then(async function(res){
+  //     const data=await res.json();
+  //     setTodos(data.todos)
+  //   })
+
+  useEffect(()=>{
+    fetch("http://localhost:3000/todos")
     .then(async function(res){
       const data=await res.json();
       setTodos(data.todos)
     })
+  },[])
 
   return (
-    <div>
+    <div> 
       <CreateTodo></CreateTodo>
       <Todos todo={todos}></Todos>
     </div>

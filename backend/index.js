@@ -41,27 +41,40 @@ app.get("/todos", async function(req,res){
     })
 })
 
-app.put("/completed", async function(req,res){
-    //marking todos completed
-    const updatepayLoad=req.body;
-    const parsedPayLoad=updateTodo.safeParse(updatepayLoad)
-    if(!parsedPayLoad.success){
-        res.status(411).json({
-            msg: "Wrong inputs"
-        })
-        return;
+app.put("/completed", async function(req, res) {
+    const { id } = req.body;
+    if (!id) {
+        return res.status(400).json({ msg: "Missing id" });
     }
 
-    await todo.update({
-        _id: req.body.id
-    },{
-        completed: true
-    })
+    try {
+        const result = await todo.updateOne({ _id: id }, { $set: { completed: true } });
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ msg: "Todo not found" });
+        }
+        res.json({ msg: "Todo updated successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: "Server error" });
+    }
+});
 
-    res.json({
-        msg: "Todo marked as completed"
-    })
+// app.put("/completed", async function(req,res){
+//     //marking todos completed
+//     const updatepayLoad=req.body;
+//     const parsedPayLoad=updatepayLoad.safeParse(updatepayLoad)
+//     if(!parsedPayLoad.success){
+//         res.status(411).json({
+//             msg: "Wrong inputs"
+//         })
+//         return;
+//     }
+
+//     await todo.update({
+//         _id: req.body.id
+//     },{
+//         completed: true
+//     })
     
-})
+// })
 
 app.listen(3000)
