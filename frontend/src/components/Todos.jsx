@@ -2,8 +2,12 @@ import { useState } from "react";
 
 export function Todos({ todo }) {
     const [completedIds, setCompletedIds] = useState(new Set()); // Track completed TODOs by ID
-
-    const markAsComplete = (id) => {
+    todo.map((item)=>{
+        if(item['completed']==true){
+            completedIds.add(item._id)
+        }
+    })
+    const markAsComplete = (item,id) => {
         fetch("http://localhost:3000/completed", {
             method: "PUT", // Make sure this matches your backend
             body: JSON.stringify({
@@ -28,7 +32,7 @@ export function Todos({ todo }) {
             <div key={item._id}>
                 <h2>{item.title}</h2>
                 <h3>{item.description}</h3>
-                <button onClick={() => markAsComplete(item._id)}>
+                <button onClick={() => markAsComplete(item,item._id)}>
                     {completedIds.has(item._id) ? "Completed" : "Mark as complete"}
                 </button>
             </div>
